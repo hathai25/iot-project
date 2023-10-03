@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	amqp_client "iot_backend/amqp"
 	"iot_backend/controllers"
 	"iot_backend/database"
 	"iot_backend/middlewares"
@@ -11,6 +12,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
+
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Panicf("%s: %s", msg, err)
+	}
+}
 
 func main() {
 	//load env file
@@ -32,6 +39,8 @@ func main() {
 	// Initialize Router
 	router := initRouter()
 	PORT := os.Getenv("PORT")
+	ampq_client := amqp_client.AmqpClient{}
+	go ampq_client.Consume()
 	router.Run(PORT)
 }
 
