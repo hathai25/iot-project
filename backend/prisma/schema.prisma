@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  male
+  female
+  others
+}
+
+model User {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  email    String     @unique
+  password String
+  name     String
+  avatar   String?    @default("https://i.imgur.com/HeIi0wU.png")
+  Vehicle  Vehicle[]  @relation("user")
+  RFIDCard RFIDCard[] @relation("user-card")
+}
+
+enum VehicleType {
+  motorbike
+  car
+}
+
+enum VehicleStatus {
+  parking
+  away
+}
+
+model Vehicle {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  userID      String        @db.ObjectId
+  user        User          @relation("user", fields: [userID], references: [id])
+  plate       String
+  type        VehicleType
+  status      VehicleStatus
+  description String
+  image       String
+  History     History[]     @relation("vehicle")
+}
+
+enum HistoryType {
+  in
+  out
+}
+
+model History {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  vehicleID String      @db.ObjectId
+  vehicle   Vehicle     @relation("vehicle", fields: [vehicleID], references: [id])
+  type      HistoryType
+  time      DateTime    @default(now())
+  image     String
+  plate     String
+}
+
+enum RFIDCardType {
+  user
+  visitor
+}
+
+model RFIDCard {
+  id      String       @id @default(auto()) @map("_id") @db.ObjectId
+  type    RFIDCardType
+  user    User?        @relation("user-card", fields: [userID], references: [id])
+  userID  String?      @db.ObjectId
+  balance Int?         @default(0)
+}
