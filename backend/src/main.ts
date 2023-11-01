@@ -8,10 +8,10 @@ async function bootstrap() {
   app.setGlobalPrefix("api");
 
   const config = new DocumentBuilder()
-    .setTitle("Web chat API")
-    .setDescription("API description for web chat application")
+    .setTitle("Smart Vehicle Parking System")
+    .setDescription("API description for Smart Vehicle Parking System")
     .setVersion("1.0")
-    .addTag("Chat")
+    .addTag("Parking System")
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
@@ -21,5 +21,8 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
+
+  console.log(`swagger: http://localhost:3000/api`);
+  
 }
 bootstrap();

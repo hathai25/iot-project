@@ -40,11 +40,11 @@ model Vehicle {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   userID      String        @db.ObjectId
   user        User          @relation("user", fields: [userID], references: [id])
-  plate       String
+  plate       String        @unique
   type        VehicleType
   status      VehicleStatus
-  description String
-  image       String
+  description String?
+  image       String?
   History     History[]     @relation("vehicle")
 }
 
