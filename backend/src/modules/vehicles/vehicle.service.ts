@@ -27,15 +27,12 @@ export class VehicleService {
     return result;
   }
 
-  async getVehicleByUserID(
-    userID: string
-  ): Promise<ISuccessListRespone<VehicleDto> | null> {
+  async getVehicleByUserID(userID: string): Promise<Array<VehicleDto>> {
     const vehicles = await this.prisma.vehicle.findMany({
       where: { userID: userID },
     });
 
-    const result = arrDataToRespone(VehicleDto)(vehicles, vehicles.length);
-    return result;
+    return vehicles;
   }
 
   async getVehicleByPlate(plate: string): Promise<VehicleDto | null> {
@@ -52,10 +49,7 @@ export class VehicleService {
     });
   }
 
-  async getVehicles(
-    filter: VehicleFilterDto
-  ): Promise<ISuccessListRespone<VehicleDto> | null> {
-    const total = await this.countVehicles(filter);
+  async getVehicles(filter: VehicleFilterDto): Promise<Array<VehicleDto>> {
     const vehicles = await this.prisma.vehicle.findMany({
       where: {
         plate: {
@@ -65,13 +59,13 @@ export class VehicleService {
       skip: filter.skip,
       take: filter.pagesize,
     });
-    const result = arrDataToRespone(VehicleDto)(vehicles, total);
-    return result;
+
+    return vehicles;
   }
 
-  async getAllVehicles(): Promise<ISuccessListRespone<VehicleDto> | null> {
+  async getAllVehicles(): Promise<Array<VehicleDto>> {
     const vehicles = await this.prisma.vehicle.findMany();
-    return arrDataToRespone(VehicleDto)(vehicles, vehicles.length);
+    return vehicles;
   }
 
   async createVehicle(data: CreateVehicleDto): Promise<VehicleEntity> {
@@ -99,7 +93,7 @@ export class VehicleService {
       throw new NotFoundException("Vehicle not found");
     }
 
-    const result = await this.prisma.vehicle.update({
+    const result: VehicleEntity = await this.prisma.vehicle.update({
       data,
       where: { id },
     });
@@ -117,10 +111,12 @@ export class VehicleService {
       throw new BadRequestException(`Licisen plate ${data.plate} mismatch!`);
     }
 
-    return await this.prisma.vehicle.update({
+    const result: VehicleEntity = await this.prisma.vehicle.update({
       data,
       where: { id },
     });
+
+    return result;
   }
 
   async deleteVehicle(id: string): Promise<VehicleEntity> {
@@ -130,8 +126,10 @@ export class VehicleService {
       throw new NotFoundException("Vehicle not found");
     }
 
-    return await this.prisma.vehicle.delete({
+    const result: VehicleEntity = await this.prisma.vehicle.delete({
       where: { id },
     });
+
+    return result;
   }
 }

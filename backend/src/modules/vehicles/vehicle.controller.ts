@@ -1,11 +1,20 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { VehicleService } from "./vehicle.service";
 import { VehicleEntity } from "./vehicle.entity";
 import { CreateVehicleDto } from "./dtos/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dtos/update-vehicle.dto";
-import { UpdateParkingStatusVehicleDto } from "./dtos";
+import { UpdateParkingStatusVehicleDto, VehicleDto } from "./dtos";
 import { VehicleFilterDto } from "./dtos/vehicle-filter.dto";
+import { arrDataToRespone } from "src/common/respone/util";
 
 @ApiTags("vehicles")
 @Controller("vehicles")
@@ -15,7 +24,8 @@ export class VehicleController {
   @Get("/all")
   @ApiOkResponse({ description: "Get all vehicles" })
   async findAll() {
-    return this.vehicleService.getAllVehicles();
+    const vehicles = await this.vehicleService.getAllVehicles();
+    return arrDataToRespone(VehicleDto)(vehicles, vehicles.length);
   }
 
   @Get(":id")
@@ -27,7 +37,8 @@ export class VehicleController {
   @Get("me/:id")
   @ApiOkResponse({ description: "Get vehicle by user ID", type: VehicleEntity })
   async findByUser(@Param("id") id: string) {
-    return this.vehicleService.getVehicleByUserID(id);
+    const vehicles = await this.vehicleService.getVehicleByUserID(id);
+    return arrDataToRespone(VehicleDto)(vehicles, vehicles.length);
   }
 
   @Get("plate/:plate")
@@ -39,7 +50,8 @@ export class VehicleController {
   @Get()
   @ApiOkResponse({ description: "Get vehicles by filter" })
   async findFilter(@Body() vehicleFilterDto: VehicleFilterDto) {
-    return this.vehicleService.getVehicles(vehicleFilterDto);
+    const vehicles = await this.vehicleService.getVehicles(vehicleFilterDto);
+    return arrDataToRespone(VehicleDto)(vehicles, vehicles.length);
   }
 
   @Post()
@@ -70,5 +82,11 @@ export class VehicleController {
       id,
       updateParkingStatusVehicleDto
     );
+  }
+
+  @Delete("delete/:id")
+  @ApiOkResponse({ description: "Delete vehicle by Id" })
+  async deleteVehicle(@Param("id") id: string) {
+    return this.vehicleService.deleteVehicle(id);
   }
 }

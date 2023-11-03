@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { $Enums } from "@prisma/client";
+import { VehicleStatus, VehicleType } from "@prisma/client";
 import { IsOptional, Length } from "class-validator";
 
 export class UpdateVehicleDto {
@@ -14,11 +14,11 @@ export class UpdateVehicleDto {
 
   @ApiProperty()
   @IsOptional()
-  type: $Enums.VehicleType;
+  type: VehicleType;
 
   @ApiProperty()
   @IsOptional()
-  status: $Enums.VehicleStatus;
+  status: VehicleStatus;
 
   @ApiProperty()
   @IsOptional()

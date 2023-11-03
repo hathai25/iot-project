@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { $Enums, Vehicle } from "@prisma/client";
+import { VehicleStatus, VehicleType } from "@prisma/client";
 import { Expose } from "class-transformer";
 
 export class VehicleDto {
@@ -17,15 +17,15 @@ export class VehicleDto {
 
   @Expose()
   @ApiProperty()
-  type: $Enums.VehicleType;
+  type: VehicleType;
 
   @Expose()
   @ApiProperty()
-  status: $Enums.VehicleStatus;
+  status: VehicleStatus;
 
   @Expose()
   @ApiProperty()
-  description?: string;
+  description: string;
 
   @Expose()
   @ApiProperty()
