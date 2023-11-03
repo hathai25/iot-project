@@ -1,0 +1,1 @@
+export { VehicleList as default } from "../../components/vehicles/list"

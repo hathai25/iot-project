@@ -3,5 +3,4 @@ export const USER_API = {
   LIST: "/users/list",
   GET_USER: "/users/:id",
   UPDATE: "/users/:id",
-  GET_NOT_FRIEND: "/users/list-not-friends/all",
 };
