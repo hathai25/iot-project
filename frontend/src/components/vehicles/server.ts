@@ -1,7 +1,13 @@
 import { VehicleEntity } from "@/server/modals/VehicleEntity.ts";
 import { CreateVehicleRequest } from "@/server/hooks/useCreateVehicle.ts";
 
-export type Vehicle = VehicleEntity;
+export type Vehicle = VehicleEntity & {
+  user: {
+    id: string;
+    avatar: string;
+    name: string;
+  };
+};
 export type CreateVehicleProps = CreateVehicleRequest;
 
 export { useListVehicle } from "@/server/hooks/useListVehicle";
