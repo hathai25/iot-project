@@ -2,10 +2,14 @@ import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { VehicleService } from "./vehicle.service";
 import { VehicleEntity } from "./vehicle.entity";
-import { CreateVehicleDto } from "./dtos/create-vehicle.dto";
-import { UpdateVehicleDto } from "./dtos/update-vehicle.dto";
-import { UpdateParkingStatusVehicleDto } from "./dtos";
+import {
+  UpdateParkingStatusVehicleDto,
+  VehicleDto,
+  UpdateVehicleDto,
+  CreateVehicleDto,
+} from "./dtos";
 import { VehicleFilterDto } from "./dtos/vehicle-filter.dto";
+import { dataToRespone } from "src/common/respone/util";
 
 @ApiTags("vehicles")
 @Controller("vehicles")
@@ -21,7 +25,9 @@ export class VehicleController {
   @Get(":id")
   @ApiOkResponse({ description: "Get vehicle by id", type: VehicleEntity })
   async findOne(@Param("id") id: string) {
-    return this.vehicleService.getVehicle(id);
+    const data = await this.vehicleService.getVehicle(id);
+
+    return dataToRespone(VehicleDto)(data);
   }
 
   @Get("me/:id")
@@ -42,13 +48,13 @@ export class VehicleController {
     return this.vehicleService.getVehicles(vehicleFilterDto);
   }
 
-  @Post()
+  @Post("/create")
   @ApiCreatedResponse({ description: "Create vehicle", type: VehicleEntity })
   async create(@Body() createVehicleDto: CreateVehicleDto) {
     return this.vehicleService.createVehicle(createVehicleDto);
   }
 
-  @Put(":id")
+  @Put("/update/:id")
   @ApiOkResponse({ description: "Update vehicle", type: VehicleEntity })
   async update(
     @Param("id") id: string,
