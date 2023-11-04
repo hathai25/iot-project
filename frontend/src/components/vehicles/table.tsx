@@ -8,6 +8,7 @@ import {
   Title,
   Group,
   ActionIcon,
+  Avatar,
 } from "@mantine/core";
 import { useState } from "react";
 import { Vehicle } from "./server.ts";
@@ -48,6 +49,7 @@ export const VehicleTable = (props: { vehicles: Vehicle[] }) => {
           <tr>
             <th style={{ whiteSpace: "nowrap" }}>Plate</th>
             <th style={{ whiteSpace: "nowrap" }}>Status</th>
+            <th style={{ whiteSpace: "nowrap" }}>Owner</th>
             <th style={{ whiteSpace: "nowrap" }}>Description</th>
             <th style={{ whiteSpace: "nowrap" }}>Type</th>
             <th style={{ whiteSpace: "nowrap" }}>Action</th>
@@ -66,6 +68,12 @@ export const VehicleTable = (props: { vehicles: Vehicle[] }) => {
               <td style={{ whiteSpace: "nowrap" }}>{vehicle.plate}</td>
               <td style={{ whiteSpace: "nowrap" }}>
                 <VehicleParkingStatus status={vehicle.status} />
+              </td>
+              <td style={{ whiteSpace: "nowrap" }}>
+                <Group>
+                  <Avatar size="xs" src={vehicle.user.avatar} radius="xl" />
+                  <Text>{vehicle.user.name}</Text>
+                </Group>
               </td>
               <td style={{ whiteSpace: "nowrap" }}>{vehicle.description}</td>
               <td style={{ whiteSpace: "nowrap" }}>
