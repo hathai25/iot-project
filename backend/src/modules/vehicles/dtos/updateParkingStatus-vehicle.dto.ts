@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { $Enums } from "@prisma/client";
+import { VehicleStatus } from "@prisma/client";
 import { IsNotEmpty, Length } from "class-validator";
 
 export class UpdateParkingStatusVehicleDto {
@@ -14,7 +14,7 @@ export class UpdateParkingStatusVehicleDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  status: $Enums.VehicleStatus;
+  status: VehicleStatus;
 
   @ApiProperty()
   image: string;
