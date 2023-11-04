@@ -12,7 +12,11 @@ import { VehicleService } from "./vehicle.service";
 import { VehicleEntity } from "./vehicle.entity";
 import { CreateVehicleDto } from "./dtos/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dtos/update-vehicle.dto";
-import { UpdateParkingStatusVehicleDto, VehicleDto } from "./dtos";
+import {
+  UpdateParkingStatusVehicleDto,
+  VehicleDto,
+  VehicleWithUserDetailDto,
+} from "./dtos";
 import { VehicleFilterDto } from "./dtos/vehicle-filter.dto";
 import { arrDataToRespone } from "src/common/respone/util";
 
@@ -25,7 +29,10 @@ export class VehicleController {
   @ApiOkResponse({ description: "Get all vehicles" })
   async findAll() {
     const vehicles = await this.vehicleService.getAllVehicles();
-    return arrDataToRespone(VehicleDto)(vehicles, vehicles.length);
+    return arrDataToRespone(VehicleWithUserDetailDto)(
+      vehicles,
+      vehicles.length
+    );
   }
 
   @Get(":id")
@@ -38,7 +45,10 @@ export class VehicleController {
   @ApiOkResponse({ description: "Get vehicle by user ID", type: VehicleEntity })
   async findByUser(@Param("id") id: string) {
     const vehicles = await this.vehicleService.getVehicleByUserID(id);
-    return arrDataToRespone(VehicleDto)(vehicles, vehicles.length);
+    return arrDataToRespone(VehicleWithUserDetailDto)(
+      vehicles,
+      vehicles.length
+    );
   }
 
   @Get("plate/:plate")
