@@ -12,7 +12,7 @@ import { isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { AuthShell } from "@/components/shell/auth-shell.tsx";
 import { CardStyles } from "./styles.tsx";
-import { useSignIn } from "@/server/hooks/useSignIn.ts";
+import { useAdminSignIn } from "@/server/hooks/useAdminSignIn.ts";
 
 type SignInForm = {
   email: string;
@@ -20,7 +20,7 @@ type SignInForm = {
 };
 
 export const SignIn = (): JSX.Element => {
-  const signIn = useSignIn();
+  const signIn = useAdminSignIn();
   const navigate = useNavigate();
   const form = useForm<SignInForm>({
     initialValues: { email: "", password: "" },
