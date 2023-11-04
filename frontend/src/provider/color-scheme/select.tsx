@@ -1,47 +1,23 @@
 import {
-  Box,
-  Center,
-  SegmentedControl,
-  useMantineColorScheme,
+    ActionIcon,
+    useMantineColorScheme,
 } from "@mantine/core";
-import { IconMoon, IconSun, Icon as TablerIcon } from "@tabler/icons-react";
-import { ReactNode } from "react";
+import {IconSun, IconMoonStars} from "@tabler/icons-react";
 
-interface LabelProps {
-  Icon: TablerIcon;
-  children: ReactNode;
-}
-
-const Label = (props: LabelProps): JSX.Element => {
-  const { Icon, children } = props;
-  return (
-    <Center>
-      <Icon size={16} />
-      <Box ml={10}>{children}</Box>
-    </Center>
-  );
-};
-
-const Light = (): JSX.Element => {
-  return <Label Icon={IconSun}>Light</Label>;
-};
-
-const Dark = (): JSX.Element => {
-  return <Label Icon={IconMoon}>Dark</Label>;
-};
 
 export const ColorSchemeSelect = (): JSX.Element => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+    const {colorScheme, toggleColorScheme} = useMantineColorScheme();
+    const dark = colorScheme === 'dark';
 
-  return (
-    <SegmentedControl
-      data={[
-        { value: "light", label: <Light /> },
-        { value: "dark", label: <Dark /> },
-      ]}
-      value={colorScheme}
-      onChange={(value: "light" | "dark") => toggleColorScheme(value)}
-      fullWidth
-    />
-  );
+    return (
+        <ActionIcon
+            variant="outline"
+            color={dark ? 'yellow' : 'blue'}
+            onClick={() => toggleColorScheme()}
+            title="Toggle color scheme"
+            radius="xl"
+        >
+            {dark ? <IconSun size="1.2rem"/> : <IconMoonStars size="1.2rem"/>}
+        </ActionIcon>
+    );
 };

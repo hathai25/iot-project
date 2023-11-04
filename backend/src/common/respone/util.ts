@@ -54,8 +54,7 @@ export function arrDataToRespone<T>(
   options?: ClassTransformOptions
 ): (data: any, totalItem: number) => ISuccessListRespone<T> {
   options = options || { excludeExtraneousValues: true };
-
-  return (data: any, totalItem: number) => {
+  const result = (data: any, totalItem: number) => {
     data = plainToClass(cls, data, options);
     return {
       message: "success",
@@ -65,6 +64,7 @@ export function arrDataToRespone<T>(
       },
     };
   };
+  return result;
 }
 
 export function errToRespone(
