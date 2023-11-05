@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
 
 export class CreateAdminDto {
   @IsEmail()
@@ -6,7 +6,7 @@ export class CreateAdminDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(6)
+  @Length(6, 8)
   readonly password: string;
 
   @IsString()
