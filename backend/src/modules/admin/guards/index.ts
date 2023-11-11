@@ -1,1 +1,1 @@
-export * from "./jwt-admin.gurad";
+export * from "./jwt-admin.guard";

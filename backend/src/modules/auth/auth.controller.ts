@@ -7,6 +7,7 @@ import { UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { ISuccessRespone } from "src/common/respone/interface";
 import { dataToRespone } from "src/common/respone/util";
+import { JwtAdminGuard } from "../admin/guards";
 
 @ApiTags("auth")
 @Controller("auth")

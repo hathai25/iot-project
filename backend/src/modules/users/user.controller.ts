@@ -21,21 +21,21 @@ import { JwtAdminGuard } from "../admin/guards";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAdminGuard)
   @Get(":id")
-  @UseGuards(JwtAdminGuard, JwtAuthGuard)
   @ApiOkResponse({ description: "Get user by id", type: UserEntity })
   async findOne(@Param("id") id: string) {
     return this.userService.getUser(id);
   }
 
+  @UseGuards(JwtAdminGuard)
   @Post()
-  @UseGuards(JwtAdminGuard, JwtAuthGuard)
   @ApiCreatedResponse({ description: "Create user", type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
   }
 
-  @UseGuards(JwtAdminGuard, JwtAuthGuard)
+  @UseGuards(JwtAdminGuard)
   @Patch(":id")
   @ApiOkResponse({ description: "Update user", type: UserEntity })
   async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
@@ -49,15 +49,15 @@ export class UserController {
     return this.userService.deleteUser(id);
   }
 
-  @Get("/list/all")
   @UseGuards(JwtAdminGuard)
+  @Get("/list/all")
   @ApiOkResponse({ description: "Get all users" })
   async findAll() {
     return this.userService.getAllUsers();
   }
 
-  @Post("/list")
   @UseGuards(JwtAdminGuard)
+  @Post("/list")
   @ApiOkResponse({ description: "Get users with filter" })
   async getUsers(@Body() filter: UserFilterDto) {
     return this.userService.getUsers(filter);
