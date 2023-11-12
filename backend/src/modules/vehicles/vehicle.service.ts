@@ -14,6 +14,7 @@ import {
   VehicleWithUserDetailDto,
 } from "./dtos";
 import { VehicleEntity } from "./vehicle.entity";
+import { VehicleStatus } from "@prisma/client";
 
 @Injectable()
 export class VehicleService {
@@ -178,9 +179,15 @@ export class VehicleService {
       throw new BadRequestException(`Licisen plate ${data.plate} mismatch!`);
     }
 
-    if (vehicle.status === "away" && data.status === "away") {
+    if (
+      vehicle.status === VehicleStatus.away &&
+      data.status === VehicleStatus.away
+    ) {
       throw new BadRequestException("Your car is not parked");
-    } else if (vehicle.status === "parking" && data.status === "parking") {
+    } else if (
+      vehicle.status === VehicleStatus.parking &&
+      data.status === VehicleStatus.parking
+    ) {
       throw new BadRequestException("Your car is parked");
     }
 

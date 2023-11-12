@@ -1,4 +1,4 @@
-import { ApiOkResponse } from "@nestjs/swagger";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { AdminService } from "./admin.service";
 import { ISuccessRespone } from "src/common/respone/interface";
@@ -7,6 +7,7 @@ import { dataToRespone } from "src/common/respone/util";
 import { JwtAdminGuard } from "./guards";
 import { AdminEntity } from "./admin.entity";
 
+@ApiTags("admin")
 @Controller("admin")
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

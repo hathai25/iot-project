@@ -50,8 +50,8 @@ model Vehicle {
   user        User          @relation("user", fields: [userID], references: [id])
   plate       String        @unique
   type        VehicleType
-  status      VehicleStatus
-  description String?
+  status      VehicleStatus @default(value: away)
+  description String?       
   image       String?
   History     History[]     @relation("vehicle")
 }
