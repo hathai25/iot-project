@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
-import { HistoryDto } from "./dtos/history.dto";
 import { VehicleService } from "../vehicles/vehicle.service";
-import { HistoryType, VehicleStatus } from "@prisma/client";
-import { CreateHistoryDto } from "./dtos/create-history.dto";
+import { FilterHistoryDto, CreateHistoryDto, HistoryDto } from "./dtos";
 
 @Injectable()
 export class HistoryService {
@@ -16,34 +10,12 @@ export class HistoryService {
     private readonly vehicleService: VehicleService
   ) {}
 
-  async getListHistoryByVehicleId(
-    vehicleID: string
+  async listHistory(
+    filterHistory: FilterHistoryDto
   ): Promise<Array<HistoryDto>> {
-    await this.vehicleService.getVehicle(vehicleID);
-
     const history = await this.prisma.history.findMany({
-      where: { vehicleID },
-      include: {
-        vehicle: {
-          select: {
-            status: true,
-          },
-        },
-      },
-    });
-
-    return history;
-  }
-
-  async getListHistoryByType(type: HistoryType): Promise<Array<HistoryDto>> {
-    const history = await this.prisma.history.findMany({
-      where: { type },
-      include: {
-        vehicle: {
-          select: {
-            status: true,
-          },
-        },
+      where: {
+        ...filterHistory,
       },
     });
 

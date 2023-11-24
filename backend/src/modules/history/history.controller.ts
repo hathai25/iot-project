@@ -5,16 +5,15 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { HistoryService } from "./history.service";
 import { JwtAdminGuard } from "../admin/guards";
 import { arrDataToRespone } from "src/common/respone/util";
-import { HistoryDto } from "./dtos/history.dto";
-import { HistoryType } from "@prisma/client";
+import { HistoryDto, CreateHistoryDto, FilterHistoryDto } from "./dtos";
 import { HistoryEntity } from "./history.entity";
-import { CreateHistoryDto } from "./dtos/create-history.dto";
 
 @ApiTags("history")
 @Controller("history")
@@ -22,21 +21,10 @@ export class HistoryController {
   constructor(private readonly historyService: HistoryService) {}
 
   @UseGuards(JwtAdminGuard)
-  @Get(":id")
+  @Get("list")
   @ApiOkResponse({ description: "Get list history by vehicle id" })
-  async getListHistoryByVehicleId(@Param("id") vehicleId: string) {
-    const listHistory = await this.historyService.getListHistoryByVehicleId(
-      vehicleId
-    );
-
-    return arrDataToRespone(HistoryDto)(listHistory, listHistory.length);
-  }
-
-  @UseGuards(JwtAdminGuard)
-  @Get("type/:type")
-  @ApiOkResponse({ description: "Get list history by vehicle id" })
-  async getListHistoryByType(@Param("type") type: HistoryType) {
-    const listHistory = await this.historyService.getListHistoryByType(type);
+  async getHistoryList(@Query() filterHistory: FilterHistoryDto) {
+    const listHistory = await this.historyService.listHistory(filterHistory);
 
     return arrDataToRespone(HistoryDto)(listHistory, listHistory.length);
   }
