@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { VehicleStatus, VehicleType } from "@prisma/client";
-import { IsNotEmpty, Length } from "class-validator";
+import { IsNotEmpty, IsOptional, Length } from "class-validator";
 
 export class CreateVehicleDto {
   @IsNotEmpty()
@@ -16,13 +16,15 @@ export class CreateVehicleDto {
   @ApiProperty()
   type: VehicleType;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   status: VehicleStatus;
 
+  @IsOptional()
   @ApiProperty()
   description?: string;
 
+  @IsOptional()
   @ApiProperty()
   image?: string;
 }
