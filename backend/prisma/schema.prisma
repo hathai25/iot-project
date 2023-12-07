@@ -25,13 +25,13 @@ model Admin {
 }
 
 model User {
-  id       String     @id @default(auto()) @map("_id") @db.ObjectId
-  email    String     @unique
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  email    String    @unique
   password String
   name     String
-  avatar   String?    @default("https://i.imgur.com/HeIi0wU.png")
-  Vehicle  Vehicle[]  @relation("user")
-  RFIDCard RFIDCard[] @relation("user-card")
+  avatar   String?   @default("https://i.imgur.com/HeIi0wU.png")
+  Vehicle  Vehicle[] @relation("user")
+  rfidCard RFIDCard? @relation("user-card")
 }
 
 enum VehicleType {
@@ -51,9 +51,11 @@ model Vehicle {
   plate       String        @unique
   type        VehicleType
   status      VehicleStatus @default(value: away)
-  description String?       
+  description String?
   image       String?
   History     History[]     @relation("vehicle")
+  rFIDCardId  String       @db.ObjectId
+  RFIDCard    RFIDCard     @relation("vehicle-card", fields: [rFIDCardId], references: [id])
 }
 
 enum HistoryType {
@@ -79,7 +81,8 @@ enum RFIDCardType {
 model RFIDCard {
   id      String       @id @default(auto()) @map("_id") @db.ObjectId
   type    RFIDCardType
-  user    User?        @relation("user-card", fields: [userID], references: [id])
-  userID  String?      @db.ObjectId
+  user    User         @relation("user-card", fields: [userID], references: [id])
+  userID  String       @unique @db.ObjectId
+  Vehicle Vehicle[]    @relation("vehicle-card")
   balance Int?         @default(0)
 }

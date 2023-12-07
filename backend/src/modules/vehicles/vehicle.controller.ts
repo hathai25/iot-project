@@ -30,7 +30,7 @@ export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}
 
   @UseGuards(JwtAdminGuard)
-  @Get("/all")
+  @Get("/list/all")
   @ApiOkResponse({ description: "Get all vehicles" })
   async findAll() {
     const vehicles = await this.vehicleService.getAllVehicles();

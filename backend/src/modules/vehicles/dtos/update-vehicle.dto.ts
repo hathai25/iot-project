@@ -7,6 +7,9 @@ export class UpdateVehicleDto {
   @IsOptional()
   userID: string;
 
+  @ApiProperty()
+  rFIDCardId: string;
+
   @Length(6, 12) // case: xe quân sự (7 kí tự), xe ngoại giao (12 kí tự)
   @ApiProperty()
   @IsOptional()

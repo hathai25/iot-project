@@ -5,10 +5,16 @@ import { brcyptHelper } from "src/utils/bcrypt";
 import { UserEntity } from "./user.entity";
 import { ISuccessListRespone } from "src/common/respone/interface";
 import { arrDataToRespone } from "src/common/respone/util";
+import { RFIDCardService } from "../RFID/RFIDCard.service";
+import { CreateRFIDCardDto } from "../RFID/dtos";
+import { RFIDCardType } from "@prisma/client";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly rfidCardService: RFIDCardService
+  ) {}
 
   async validateUser(
     email: string,
@@ -37,13 +43,23 @@ export class UserService {
     const users = await this.prisma.user.findMany({
       where: { email: data.email },
     });
+
     if (users.length) {
       throw new ForbiddenException("email already exists");
     }
     data.password = await brcyptHelper.hash(data.password);
-    return this.prisma.user.create({
+
+    const user = await this.prisma.user.create({
       data,
     });
+
+    this.rfidCardService.createRFIDCard({
+      type: RFIDCardType.user,
+      userID: user.id,
+      balance: 0,
+    });
+
+    return user;
   }
 
   async updateUser(params: {

@@ -15,6 +15,7 @@ import {
 } from "./dtos";
 import { VehicleEntity } from "./vehicle.entity";
 import { VehicleStatus } from "@prisma/client";
+import { UserService } from "../users/user.service";
 
 @Injectable()
 export class VehicleService {
@@ -139,6 +140,24 @@ export class VehicleService {
       where: { plate: data.plate },
     });
 
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: {
+        id: data.userID,
+      },
+      include: {
+        rfidCard: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    const newData = {
+      ...data,
+      rFIDCardId: user.rfidCard.id
+    }
+
     if (vehicle) {
       throw new ForbiddenException(
         `License plate: ${data.plate} already exists`
@@ -146,7 +165,7 @@ export class VehicleService {
     }
 
     const result = await this.prisma.vehicle.create({
-      data,
+      data: newData,
     });
     return result;
   }
