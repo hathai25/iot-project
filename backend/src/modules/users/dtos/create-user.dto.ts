@@ -5,6 +5,7 @@ import {
   IsString,
   IsUrl,
   MinLength,
+  IsNumber,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -28,4 +29,9 @@ export class CreateUserDto {
   @IsUrl()
   @ApiProperty()
   avatar: string;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  balance: number;
 }

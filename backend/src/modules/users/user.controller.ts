@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from "@nestjs/common";
@@ -36,7 +37,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAdminGuard)
-  @Patch(":id")
+  @Put(":id")
   @ApiOkResponse({ description: "Update user", type: UserEntity })
   async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.updateUser({ id, data: updateUserDto });

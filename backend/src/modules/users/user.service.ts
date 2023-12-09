@@ -1,14 +1,24 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
-import { UpdateUserDto, CreateUserDto, UserFilterDto, UserDto } from "./dtos";
+import {
+  UpdateUserDto,
+  CreateUserDto,
+  UserFilterDto,
+  ListUserDto,
+} from "./dtos";
 import { brcyptHelper } from "src/utils/bcrypt";
 import { UserEntity } from "./user.entity";
 import { ISuccessListRespone } from "src/common/respone/interface";
 import { arrDataToRespone } from "src/common/respone/util";
+import { RFIDCardService } from "../RFID/RFIDCard.service";
+import { RFIDCardType } from "@prisma/client";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly rfidCardService: RFIDCardService
+  ) {}
 
   async validateUser(
     email: string,
@@ -37,13 +47,30 @@ export class UserService {
     const users = await this.prisma.user.findMany({
       where: { email: data.email },
     });
+
     if (users.length) {
       throw new ForbiddenException("email already exists");
     }
     data.password = await brcyptHelper.hash(data.password);
-    return this.prisma.user.create({
-      data,
+
+    const userData = {
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      avatar: data.avatar,
+    };
+
+    const user = await this.prisma.user.create({
+      data: userData,
     });
+
+    this.rfidCardService.createRFIDCard({
+      type: RFIDCardType.user,
+      userID: user.id,
+      balance: data.balance,
+    });
+
+    return user;
   }
 
   async updateUser(params: {
@@ -52,12 +79,24 @@ export class UserService {
   }): Promise<UserEntity> {
     const { id, data } = params;
     return this.prisma.user.update({
-      data,
+      data: {
+        name: data.name,
+        avatar: data.avatar,
+        rfidCard: {
+          update: {
+            balance: data.balance,
+          },
+        },
+      },
       where: { id },
     });
   }
 
   async deleteUser(id: string): Promise<UserEntity> {
+    await this.prisma.rFIDCard.delete({
+      where: { userID: id },
+    });
+
     return this.prisma.user.delete({
       where: { id },
     });
@@ -71,9 +110,18 @@ export class UserService {
     });
   }
 
-  async getAllUsers(): Promise<ISuccessListRespone<UserDto>> {
-    const users = await this.prisma.user.findMany();
-    return arrDataToRespone(UserDto)(users, users.length);
+  async getAllUsers(): Promise<ISuccessListRespone<ListUserDto>> {
+    const users = await this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatar: true,
+        rfidCard: true,
+      },
+    });
+
+    return arrDataToRespone(ListUserDto)(users, users.length);
   }
 
   async getUsers(

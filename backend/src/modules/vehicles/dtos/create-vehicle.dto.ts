@@ -7,6 +7,10 @@ export class CreateVehicleDto {
   @ApiProperty()
   userID: string;
 
+  // @IsNotEmpty()
+  // @ApiProperty()
+  // rFIDCardId: string;
+
   @Length(6, 12) // case: xe quân sự (7 kí tự), xe ngoại giao (12 kí tự)
   @IsNotEmpty()
   @ApiProperty()

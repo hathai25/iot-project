@@ -3,6 +3,9 @@ import { $Enums, Vehicle } from "@prisma/client";
 
 export class VehicleEntity implements Vehicle {
   @ApiProperty()
+  rFIDCardId: string;
+  
+  @ApiProperty()
   id: string;
 
   @ApiProperty()

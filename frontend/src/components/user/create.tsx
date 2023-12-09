@@ -1,30 +1,40 @@
-import { FormValues, VehicleForm } from "./form";
+import { FormValues, UserForm } from "./form";
 import { Button, Group, Stack } from "@mantine/core";
-import { useCreateVehicle } from "./server.ts";
+import { useRegister } from "@/server/hooks/useRegister.ts";
 
-export const VehicleCreate = (props: {
+export const UserCreate = (props: {
   onSuccess: () => void;
   onCancel: () => void;
 }) => {
   const { onSuccess, onCancel } = props;
-  const create = useCreateVehicle();
+  const create = useRegister();
 
   const onSubmit = (values: FormValues) => {
-    create.mutate(values, {
-      onSuccess: onSuccess,
-    });
+    create.mutate(
+      {
+        email: values.email,
+        password: values.password,
+        name: values.name,
+        avatar: values.avatar,
+        balance: values.balance,
+      },
+      {
+        onSuccess: onSuccess,
+      },
+    );
   };
 
   return (
     <Stack>
-      <VehicleForm
+      <UserForm
         onSubmit={onSubmit}
         initialValues={{
-          plate: "",
-          description: "",
-          type: "car",
-          status: "parking",
-          userID: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          name: "",
+          balance: 0,
+          avatar: undefined,
         }}
       >
         {create.isError && <div>Something went wrong</div>}
@@ -36,7 +46,7 @@ export const VehicleCreate = (props: {
             Cancel
           </Button>
         </Group>
-      </VehicleForm>
+      </UserForm>
     </Stack>
   );
 };

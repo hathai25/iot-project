@@ -128,6 +128,16 @@ export const ShellNav = (props: Props): JSX.Element => {
         >
           <Text size="md">History</Text>
         </Anchor>
+        <Anchor
+          component={Link}
+          to="/users/list"
+          size="lg"
+          className={cx(classes.link, {
+            [classes.linkActive]: router.pathname.startsWith("/users"),
+          })}
+        >
+          <Text size="md">Users</Text>
+        </Anchor>
       </Navbar.Section>
       <Navbar.Section>
         <ShellFooter />

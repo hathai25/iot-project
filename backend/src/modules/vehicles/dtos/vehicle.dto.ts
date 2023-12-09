@@ -13,6 +13,10 @@ export class VehicleDto {
 
   @Expose()
   @ApiProperty()
+  rFIDCardId: string;
+
+  @Expose()
+  @ApiProperty()
   plate: string;
 
   @Expose()
