@@ -1,5 +1,5 @@
 export const VEHICLE_API = {
-  GET_ALL: "/vehicles/all",
+  GET_ALL: "/vehicles/list/all",
   GET_VEHICLE: "/vehicles/:id",
   GET_VEHICLE_BY_PLATE: "/vehicles/plate",
   CREATE_VEHICLE: "/vehicles/create",

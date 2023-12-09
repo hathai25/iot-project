@@ -3,4 +3,5 @@ export const USER_API = {
   LIST: "/users/list",
   GET_USER: "/users/:id",
   UPDATE: "/users/:id",
+  DELETE: "/users/:id",
 };
