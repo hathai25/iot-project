@@ -3,6 +3,7 @@ import { PrismaService } from "./prisma.service";
 import { AuthModule, UserModule, VehicleModule, AdminModule } from "./modules";
 import { HistoryModule } from "./modules/history/history.module";
 import { RFIDCardModule } from "./modules/RFID/RFIDCard.module";
+import { MqttService } from "./mqtt.service";
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { RFIDCardModule } from "./modules/RFID/RFIDCard.module";
     RFIDCardModule,
   ],
   controllers: [],
-  providers: [PrismaService],
+  providers: [PrismaService, MqttService],
 })
 export class AppModule {}
