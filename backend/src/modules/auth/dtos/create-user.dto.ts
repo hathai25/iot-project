@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
@@ -28,4 +29,9 @@ export class CreateUserDto {
   @IsUrl()
   @ApiProperty()
   avatar: string;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  balance: number;
 }
