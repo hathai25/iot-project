@@ -3,9 +3,10 @@ import { HistoryController } from "./history.controller";
 import { HistoryService } from "./history.service";
 import { PrismaService } from "src/prisma.service";
 import { VehicleService } from "../vehicles/vehicle.service";
+import { MqttService } from "src/mqtt.service";
 
 @Module({
   controllers: [HistoryController],
-  providers: [HistoryService, PrismaService, VehicleService],
+  providers: [HistoryService, PrismaService, VehicleService, MqttService],
 })
 export class HistoryModule {}

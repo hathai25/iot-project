@@ -34,4 +34,10 @@ export class MqttService implements OnModuleInit {
     this.mqttClient.publish(topic, payload);
     return `Publishing to ${topic}`;
   }
+
+  subscribe(topic: string): string {
+    console.log(`Subscribing to ${topic}`);
+    this.mqttClient.subscribe(topic);
+    return `Subscribing to ${topic}`;
+  }
 }

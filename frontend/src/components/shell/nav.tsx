@@ -110,6 +110,16 @@ export const ShellNav = (props: Props): JSX.Element => {
       <Navbar.Section grow style={{ overflow: "auto" }}>
         <Anchor
           component={Link}
+          to="/"
+          size="lg"
+          className={cx(classes.link, {
+            [classes.linkActive]: router.pathname === "/",
+          })}
+        >
+          <Text size="md">Home</Text>
+        </Anchor>
+        <Anchor
+          component={Link}
           to="/vehicles/list"
           size="lg"
           className={cx(classes.link, {
