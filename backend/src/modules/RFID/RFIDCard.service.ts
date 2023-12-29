@@ -32,6 +32,7 @@ export class RFIDCardService {
             Vehicle: true,
           },
         },
+        Vehicle: true,
       },
     });
 
@@ -109,7 +110,7 @@ export class RFIDCardService {
       });
       return updatedRFID;
     } else if (RFIDCard.type == RFIDCardType.visitor) {
-      // ... 
+      // ...
     }
   }
 

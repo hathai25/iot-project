@@ -2,13 +2,16 @@ import { Button, Group, Paper, Stack, Text } from "@mantine/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { DescriptionList } from "../description-list";
-import { useGetVehicleByPlate } from "./server";
+import { useGetRfidCard, useGetVehicleByPlate } from "./server";
 import { Loader } from "../loader";
 import { formatCurrency } from "../utils";
 import { VehicleParkingStatus } from "../vehicles/table";
+import axios from "axios";
+import mqtt from "mqtt";
 
 export const HomeView = () => {
   const [image, setImage] = useState<string | null>(null);
+  const [plate, setPlate] = useState<string | null>(null);
   const webcamRef = useRef<Webcam>(null);
   const vehicle = useGetVehicleByPlate();
   const capture = useCallback(() => {
@@ -18,12 +21,65 @@ export const HomeView = () => {
 
     const imageSrc = webcamRef.current.getScreenshot();
 
-    console.log(imageSrc);
+    try {
+      axios
+        .post("http://localhost:5000/api/upload_image", {
+          image: imageSrc,
+        })
+        .then((res) => {
+          console.log(res);
+          setPlate(res.data.plate);
+        });
+    } catch (error) {
+      console.log(error);
+    }
     vehicle.mutateAsync(test[Math.floor(Math.random() * 2)]);
   }, [webcamRef]);
 
-  console.log(vehicle);
+  const rfidCard = useGetRfidCard();
 
+  const handleRfidCard = (rfidID: string) => {
+    if (rfidID) {
+      console.log(rfidID);
+      rfidCard.mutateAsync(rfidID);
+    }
+  };
+  const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
+  const brokerUrl = "mqtt://localhost:8000/mqtt";
+
+  // MQTT client
+  let client = mqtt.connect(brokerUrl, {
+    clientId,
+    clean: true,
+    username: "",
+    password: "",
+    connectTimeout: 4000,
+    reconnectPeriod: 1000,
+  });
+  console.log(client);
+
+  useEffect(() => {
+    // Set up event handlers
+    if (client) {
+      client.on("connect", () => {
+        console.log("connected");
+        client.subscribe("park", (err) => {
+          if (!err) {
+            console.log("subscribed");
+          }
+        });
+      });
+
+      client.on("message", (topic, message) => {
+        console.log(message.toJSON());
+        // Handle the incoming message
+        handleRfidCard(JSON.parse(message.toString()).msg);
+      });
+    }
+  }, []);
+
+  console.log({ rfidCard });
+  console.log({ vehicle });
   return (
     <Stack>
       <Paper withBorder>
@@ -73,6 +129,12 @@ export const HomeView = () => {
               Please wait... <Loader />
             </Text>
           )}
+          {rfidCard.isIdle && <Text ml="xl">RfidCard</Text>}
+          {rfidCard.isLoading && (
+            <Text ml="xl">
+              Please wait... <Loader />
+            </Text>
+          )}
           {vehicle.isSuccess && (
             <Paper withBorder ml="xl">
               <DescriptionList
@@ -115,6 +177,8 @@ export const HomeView = () => {
               />
             </Paper>
           )}
+          {rfidCard.isSuccess && <Text>{JSON.stringify(rfidCard.data)}</Text>}
+          <Text>{plate}</Text>
         </Group>
       </Paper>
       <Group>
