@@ -22,7 +22,6 @@ import { VehicleFilterDto } from "./dtos/vehicle-filter.dto";
 import { arrDataToRespone } from "src/common/respone/util";
 import { dataToRespone } from "src/common/respone/util";
 import { JwtAdminGuard } from "../admin/guards";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 
 @ApiTags("vehicles")
 @Controller("vehicles")
@@ -91,7 +90,6 @@ export class VehicleController {
     return this.vehicleService.updateVehicle(id, updateVehicleDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put("/park/:id")
   @ApiOkResponse({
     description: "Update vehicle parking status",

@@ -8,5 +8,10 @@ export class VehicleWithUserDetailDto extends VehicleDto {
   user: {
     name: string;
     avatar: string;
+    rfidCard: {
+      id: string;
+      type: string;
+      balance: number;
+    };
   };
 }

@@ -15,11 +15,14 @@ import {
 } from "./dtos";
 import { VehicleEntity } from "./vehicle.entity";
 import { VehicleStatus } from "@prisma/client";
-import { UserService } from "../users/user.service";
+import { MqttService } from "src/mqtt.service";
 
 @Injectable()
 export class VehicleService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mqtt: MqttService
+  ) {}
 
   async getVehicle(id: string): Promise<VehicleWithUserDetailDto> {
     const vehicle = await this.prisma.vehicle.findUnique({
@@ -30,6 +33,13 @@ export class VehicleService {
             id: true,
             name: true,
             avatar: true,
+            rfidCard: {
+              select: {
+                id: true,
+                type: true,
+                balance: true,
+              },
+            },
           },
         },
       },
@@ -53,6 +63,13 @@ export class VehicleService {
             id: true,
             name: true,
             avatar: true,
+            rfidCard: {
+              select: {
+                id: true,
+                type: true,
+                balance: true,
+              },
+            },
           },
         },
       },
@@ -79,6 +96,13 @@ export class VehicleService {
           select: {
             name: true,
             avatar: true,
+            rfidCard: {
+              select: {
+                id: true,
+                type: true,
+                balance: true,
+              },
+            },
           },
         },
       },
@@ -128,6 +152,13 @@ export class VehicleService {
           select: {
             name: true,
             avatar: true,
+            rfidCard: {
+              select: {
+                id: true,
+                type: true,
+                balance: true,
+              },
+            },
           },
         },
       },
@@ -155,8 +186,8 @@ export class VehicleService {
 
     const newData = {
       ...data,
-      rFIDCardId: user.rfidCard.id
-    }
+      rFIDCardId: user.rfidCard.id,
+    };
 
     if (vehicle) {
       throw new ForbiddenException(
@@ -208,6 +239,11 @@ export class VehicleService {
       data.status === VehicleStatus.parking
     ) {
       throw new BadRequestException("Your car is parked");
+    }
+
+    //publish id to mqtt
+    if (data.status === VehicleStatus.parking) {
+      this.mqtt.publish("parking", id);
     }
 
     const result: VehicleEntity = await this.prisma.vehicle.update({
