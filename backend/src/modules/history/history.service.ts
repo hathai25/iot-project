@@ -33,4 +33,43 @@ export class HistoryService {
 
     return history;
   }
+
+  async getLastHistoryOfVehicle(plate: string): Promise<HistoryDto> {
+    const history = await this.prisma.history.findFirst({
+      where: {
+        plate,
+      },
+      orderBy: {
+        time: "desc",
+      },
+    });
+
+    return history;
+  }
+
+  async getLastHistoryOfRFIDCard(rfid: string): Promise<HistoryDto> {
+    const vehicles = await this.vehicleService.getVehiclesByRFID(rfid);
+    if (vehicles.length === 0) {
+      const history = await this.prisma.history.findFirst({
+        where: {
+          vehicleID: rfid,
+        },
+        orderBy: {
+          time: "desc",
+        },
+      });
+      return history;
+    }
+    const history = await this.prisma.history.findFirst({
+      where: {
+        plate: {
+          in: vehicles.map((vehicle) => vehicle.plate),
+        },
+      },
+      orderBy: {
+        time: "desc",
+      },
+    });
+    return history;
+  }
 }

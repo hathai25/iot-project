@@ -8,5 +8,6 @@ import { MqttService } from "src/mqtt.service";
 @Module({
   controllers: [HistoryController],
   providers: [HistoryService, PrismaService, VehicleService, MqttService],
+  exports: [HistoryService],
 })
 export class HistoryModule {}

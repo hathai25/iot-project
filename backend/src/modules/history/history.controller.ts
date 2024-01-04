@@ -46,4 +46,22 @@ export class HistoryController {
 
     return history;
   }
+
+  @UseGuards(JwtAdminGuard)
+  @Get("last/:plate")
+  @ApiOkResponse({ description: "Get last history of vehicle" })
+  async getLastHistoryOfVehicle(@Param("plate") plate: string) {
+    const history = await this.historyService.getLastHistoryOfVehicle(plate);
+
+    return history;
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @Get("rfid-last/:rfid")
+  @ApiOkResponse({ description: "Get last history of vehicle" })
+  async getLastHistoryOfRfid(@Param("rfid") rfid: string) {
+    const history = await this.historyService.getLastHistoryOfRFIDCard(rfid);
+
+    return history;
+  }
 }
