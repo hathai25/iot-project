@@ -61,7 +61,7 @@ export const UserTable = (props: { users: User[] }) => {
               </td>
               <td style={{ whiteSpace: "nowrap" }}>{user.email}</td>
               <td style={{ whiteSpace: "nowrap" }}>
-                {formatCurrency(user.rfidCard.balance)}
+                {formatCurrency(user?.rfidCard?.balance || 0)}
               </td>
               <td width={200} key="actions" style={{ whiteSpace: "nowrap" }}>
                 <Group spacing="xs" noWrap>

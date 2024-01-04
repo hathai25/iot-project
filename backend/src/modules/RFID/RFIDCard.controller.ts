@@ -10,7 +10,12 @@ import {
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAdminGuard } from "../admin/guards";
 import { RFIDCardService } from "./RFIDCard.service";
-import { RFIDCardDto, RFIDCardFullDto, UpdateRFIDCardDto } from "./dtos";
+import {
+  ParkDTO,
+  RFIDCardDto,
+  RFIDCardFullDto,
+  UpdateRFIDCardDto,
+} from "./dtos";
 import { arrDataToRespone } from "src/common/respone/util";
 
 @ApiTags("RFIDCard")
@@ -55,5 +60,12 @@ export class RFIDCardController {
   @ApiOkResponse()
   async deleteRFID(@Param("id") id: string) {
     return this.rfidCardService.deleteRFIDCard(id);
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @Post("park")
+  @ApiOkResponse()
+  async parkWithRFIDCard(@Body() data: ParkDTO) {
+    return this.rfidCardService.parkWithRFIDCard(data);
   }
 }

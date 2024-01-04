@@ -171,6 +171,11 @@ export class VehicleService {
       where: { plate: data.plate },
     });
 
+    if (vehicle) {
+      throw new ForbiddenException(
+        `License plate: ${data.plate} already exists`
+      );
+    }
     const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         id: data.userID,
@@ -188,12 +193,6 @@ export class VehicleService {
       ...data,
       rFIDCardId: user.rfidCard.id,
     };
-
-    if (vehicle) {
-      throw new ForbiddenException(
-        `License plate: ${data.plate} already exists`
-      );
-    }
 
     const result = await this.prisma.vehicle.create({
       data: newData,
@@ -266,5 +265,15 @@ export class VehicleService {
     });
 
     return result;
+  }
+
+  async getVehiclesByRFID(rfid: string): Promise<Array<VehicleEntity>> {
+    const vehicles = await this.prisma.vehicle.findMany({
+      where: {
+        rFIDCardId: rfid,
+      },
+    });
+
+    return vehicles;
   }
 }
