@@ -410,7 +410,7 @@ export const HomeView = () => {
         <Button
           variant="gradient"
           onClick={openBarrier}
-          loading={rfidCard.isLoading}
+          loading={park.isLoading}
         >
           Open barrier
         </Button>
