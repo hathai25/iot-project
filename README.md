@@ -1,44 +1,30 @@
-# Vietnamese License Plate Recognition
+# Smart parking management
 
-This repository provides you with a detailed guide on how to training and build a Vietnamese License Plate detection and recognition system. This system can work on 2 types of license plate in Vietnam, 1 line plates and 2 lines plates.
+This repository contain the codebase for the big project for Applied IOT course.
 
-## Installation
-
-```bash
-  git clone https://github.com/Marsmallotr/License-Plate-Recognition.git
-  cd License-Plate-Recognition
-
-  # install dependencies using pip 
-  pip install -r ./requirement.txt
-```
-
-- **Pretrained model** provided in ./model folder in this repo 
-
-- **Download yolov5 (old version) from this link:** [yolov5 - google drive](https://drive.google.com/file/d/1g1u7M4NmWDsMGOppHocgBKjbwtDA-uIu/view?usp=sharing)
-
-- Copy yolov5 folder to project folder
-
-## Run License Plate Recognition
+## Installation & Run
 
 ```bash
-  # run inference on webcam (15-20fps if there is 1 license plate in scene)
-  python webcam.py 
+  git clone https://github.com/hathai25/iot-project
 
-  # run inference on image
-  python lp_image.py ./test_images/
+  # Run mqtt broker with Docker
+  docker run --name hivemq-ce -d -p 1883:1883 8000:8000 hivemq/hivemq-ce
 
-  # run LP_recognition.ipynb if you want to know how model work in each step
+  # Run backend server
+  cd backend
+  pnpm install
+  pnpm dlx prisma db push
+  pnpm start # :3000
+
+  # Frontend
+  cd frontend
+  pnpm install
+  pnpm dev # :5173
+
+  # Image to plate service
+  cd model-server
+  pip install ./requirement.txt
+  python ./imageToPlate.py # :5000
 ```
 
-## Result
-![Demo 1](result/image.jpg)
-
-![Vid](result/video_1.gif)
-
-**Training code for Yolov5:**
-
-Use code in ./training folder
-```bash
-  training/Plate_detection.ipynb     #for LP_Detection
-  training/Letter_detection.ipynb    #for Letter_detection
-```
+Make sure to create **.env** file and corresponds env variable for backend & frontend server
